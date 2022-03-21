@@ -1,0 +1,16 @@
+{
+    "data": [
+        {
+            "phone": "0877102737",
+            "email": "nevelichkoff@gmail.com",
+            "fullName": "Никола Величков",
+            "role": "student",
+            "competitions": [
+                {
+                    "name": "Ezikovo2019",
+                    "category": "Anglijski"
+                }
+            ]
+        }
+    ]
+}
