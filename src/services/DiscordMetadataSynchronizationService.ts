@@ -74,7 +74,7 @@ export class DiscordMetadataSynchronizationService {
             const role = guildMember.roles.cache.find(r => r.id === roleId);
             try {
                 if (roleUpdateMap[roleId] && role) {
-                    return;
+                    continue;
                 }
                 if (roleUpdateMap[roleId] && !role) {
                     const targetRole = targetRoles.get(roleId);
@@ -83,7 +83,7 @@ export class DiscordMetadataSynchronizationService {
                         await guildMember.roles.add(targetRole);
                     }
 
-                    return;
+                    continue;
                 }
 
                 if (role) {
