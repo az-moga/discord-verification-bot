@@ -21,7 +21,7 @@ export class MessageCreateEventHandler implements IMessageHandlerRegistry
             return;
         }
 
-        if(!message.author.bot) {
+        if(message.author.bot) {
             return;
         }
 

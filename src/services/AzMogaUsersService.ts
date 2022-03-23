@@ -1,6 +1,6 @@
 import { IUser } from "../models/user";
-import userData from "../.data/sample-response.json";
 import { Job, scheduleJob } from 'node-schedule';
+import fetch from 'node-fetch';
 
 export class AzMogaUsersService {
     private _userCache: IUser[];
@@ -9,7 +9,8 @@ export class AzMogaUsersService {
     constructor() {
         this._userCache = [];
 
-        this._job = scheduleJob("sync-users", "*/1 * * * *", function(this: AzMogaUsersService) {
+        this.populateCache();
+        this._job = scheduleJob("sync-users", "* * * * *", function (this: AzMogaUsersService) {
             this.populateCache();
         }.bind(this))
     }
@@ -19,9 +20,27 @@ export class AzMogaUsersService {
         return this._userCache;
     }
 
+    find(phone: string, email: string) {
+        return this._userCache.find(u => u.phone === phone && u.email === email);
+    }
+
     private async populateCache() {
         //do a call to the service
-        this._userCache = userData.data;
+        try {
+            const response = await fetch(process.env.AZ_MOGA_ROLES_ENDPOINT, {
+                headers: { 'Content-Type': 'application/json' }
+            });
+            // hacky stuff to make it the desired format
+            const text = (await response.text())
+                .replaceAll(`\n`, '')
+                .replaceAll(`\r`, '')
+                .replace(']},]}', ']} ]}');
+            const result = JSON.parse(text);
+
+            this._userCache = result.data;
+        } catch (e) {
+            console.error(e)
+        }
     }
 
     dispose() {

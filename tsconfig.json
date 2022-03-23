@@ -1,15 +1,21 @@
 {
     "extends": "@tsconfig/node16/tsconfig.json",
     "compilerOptions": {
-        "typeRoots": ["src/types"],
+        "typeRoots": [
+            "src/types"
+        ],
         "outDir": "dist",
         "resolveJsonModule": true,
+        "target": "es5",
+        "sourceMap": true
     },
     "include": [
         "src"
     ],
     "exclude": [
         "node_modules"
-    ]
-    
+    ],
+    "ts-node": {
+        "files": true
+    }
 }

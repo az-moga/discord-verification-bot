@@ -11,7 +11,7 @@ export class InteractionCreateEventHandler implements ICommandRegistry {
         return this._registry[commandName];
     }
 
-    public process(interaction: Interaction<CacheType>) {
+    process(interaction: Interaction<CacheType>) {
         if (!interaction.isCommand()) return;
 
         const command = this.match(interaction.commandName);
