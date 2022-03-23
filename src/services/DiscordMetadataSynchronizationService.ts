@@ -13,7 +13,7 @@ export class DiscordMetadataSynchronizationService {
         private userService: AzMogaUsersService,
         private client: Client
     ) {
-        this._job = scheduleJob("sync-users", "*/1 * * * *", function (this: DiscordMetadataSynchronizationService) {
+        this._job = scheduleJob("sync-users", "*/10 * * * *", function (this: DiscordMetadataSynchronizationService) {
             this.synchronizeAllMetadata();
         }.bind(this))
     }
