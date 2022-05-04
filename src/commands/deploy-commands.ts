@@ -33,7 +33,7 @@ export const adjustCommandRoles = async () => {
 
     for (var command of commands) {
         if (adminOnlyCommands.indexOf(command.name) != - 1) {
-            await rest.put(Routes.applicationGuildCommand(clientId, guildId, command.id), {
+            await rest.post(Routes.applicationGuildCommand(clientId, guildId, command.id), {
                 body: {
                     "permissions": adminRoleIds.map(roleId => (
                         {
