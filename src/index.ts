@@ -15,14 +15,13 @@ import path from 'path';
 
 const dotnenvConfigPath = path.join(__dirname, ".env");
 console.log('dotnenvConfigPath', dotnenvConfigPath);
-config({path: dotnenvConfigPath});
+config({ path: dotnenvConfigPath });
 
 const bootstrap = async () => {
     await deployCommands();
-    await adjustCommandRoles();
 }
 
-bootstrap().then(() => {
+bootstrap().then(async () => {
     const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.DIRECT_MESSAGES] });
     const userService = new AzMogaUsersService();
     const userStoreService = new UserStoreService();
@@ -40,7 +39,10 @@ bootstrap().then(() => {
         metadataSyncService
     ));
 
-    client.on('ready', clientReadyHandler.process.bind(clientReadyHandler));
+    client.on('ready', async (client: Client<true>) => {
+        clientReadyHandler.process(client);
+        await adjustCommandRoles(client);
+    });
     client.on('interactionCreate', interactionCreateHandler.process.bind(interactionCreateHandler));
     client.on('messageCreate', messageCreateHandler.process.bind(messageCreateHandler))
 
