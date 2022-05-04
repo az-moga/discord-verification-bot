@@ -1,6 +1,7 @@
 import { REST } from '@discordjs/rest';
 import { RESTGetAPIApplicationGuildCommandsResult, Routes } from 'discord-api-types/v9';
 import commands, { INFO_COMMAND_NAME, NOTIFY_USERS_COMMAND_NAME } from './custom-commands';
+import { Client } from "discord.js";
 
 const adminOnlyCommands = [INFO_COMMAND_NAME]
 
@@ -18,7 +19,7 @@ const deployCommands = async () => {
         .catch(console.error);
 }
 
-export const adjustCommandRoles = async () => {
+export const adjustCommandRoles = async (client: Client) => {
     const token = process.env.CLIENT_TOKEN;
     console.log('CLIENT_TOKEN', token);
     const clientId = process.env.CLIENT_ID;
@@ -30,22 +31,22 @@ export const adjustCommandRoles = async () => {
     const rest = new REST({ version: '9' }).setToken(token);
 
     const commands = await rest.get(Routes.applicationGuildCommands(clientId, guildId)) as RESTGetAPIApplicationGuildCommandsResult;
+    const fullPermissions = commands
+        .filter(c => adminOnlyCommands.indexOf(c.name) != - 1)
+        .map(c => {
+            return {
+                id: c.id,
+                permissions: adminRoleIds.map(roleId => (
+                    {
+                        "id": roleId,
+                        "type": 1,
+                        "permission": true
+                    }
+                ))
+            };
+        });
 
-    for (var command of commands) {
-        if (adminOnlyCommands.indexOf(command.name) != - 1) {
-            await rest.post(Routes.applicationGuildCommand(clientId, guildId, command.id), {
-                body: {
-                    "permissions": adminRoleIds.map(roleId => (
-                        {
-                            "id": roleId,
-                            "type": 1,
-                            "permission": true
-                        }
-                    ))
-                }
-            })
-        }
-    }
+    await client.guilds.cache.get('123456789012345678')?.commands?.permissions.set({ fullPermissions });
 }
 
 export default deployCommands;
