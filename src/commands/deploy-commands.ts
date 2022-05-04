@@ -46,7 +46,7 @@ export const adjustCommandRoles = async (client: Client) => {
             };
         });
 
-    await client.guilds.cache.get('123456789012345678')?.commands?.permissions.set({ fullPermissions });
+    await client.guilds.cache.get(guildId)?.commands?.permissions.set({ fullPermissions });
 }
 
 export default deployCommands;
