@@ -18,8 +18,8 @@ console.log('dotnenvConfigPath', dotnenvConfigPath);
 config({path: dotnenvConfigPath});
 
 const bootstrap = async () => {
-    // await deployCommands();
-    // await adjustCommandRoles();
+    await deployCommands();
+    await adjustCommandRoles();
 }
 
 bootstrap().then(() => {
@@ -38,8 +38,7 @@ bootstrap().then(() => {
         userService,
         userStoreService,
         metadataSyncService
-    )
-    );
+    ));
 
     client.on('ready', clientReadyHandler.process.bind(clientReadyHandler));
     client.on('interactionCreate', interactionCreateHandler.process.bind(interactionCreateHandler));
