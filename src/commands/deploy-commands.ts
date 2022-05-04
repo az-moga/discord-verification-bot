@@ -30,23 +30,27 @@ export const adjustCommandRoles = async (client: Client) => {
     console.log('AZ_MOGA_ADMIN_ROLE_IDS', process.env.AZ_MOGA_ADMIN_ROLE_IDS);
     const rest = new REST({ version: '9' }).setToken(token);
 
-    const commands = await rest.get(Routes.applicationGuildCommands(clientId, guildId)) as RESTGetAPIApplicationGuildCommandsResult;
-    const fullPermissions = commands
-        .filter(c => adminOnlyCommands.indexOf(c.name) != - 1)
-        .map(c => {
-            return {
-                id: c.id,
-                permissions: adminRoleIds.map(roleId => (
-                    {
-                        "id": roleId,
-                        "type": 1,
-                        "permission": true
-                    }
-                ))
-            };
-        });
+    try {
+        const commands = await rest.get(Routes.applicationGuildCommands(clientId, guildId)) as RESTGetAPIApplicationGuildCommandsResult;
+        const fullPermissions = commands
+            .filter(c => adminOnlyCommands.indexOf(c.name) != - 1)
+            .map(c => {
+                return {
+                    id: c.id,
+                    permissions: adminRoleIds.map(roleId => (
+                        {
+                            "id": roleId,
+                            "type": 1,
+                            "permission": true
+                        }
+                    ))
+                };
+            });
 
-    await client.guilds.cache.get(guildId)?.commands?.permissions.set({ fullPermissions });
+        await client.guilds.cache.get(guildId)?.commands?.permissions.set({ fullPermissions });
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 export default deployCommands;
