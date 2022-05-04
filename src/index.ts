@@ -18,8 +18,8 @@ console.log('dotnenvConfigPath', dotnenvConfigPath);
 config({path: dotnenvConfigPath});
 
 const bootstrap = async () => {
-    await deployCommands();
-    await adjustCommandRoles();
+    // await deployCommands();
+    // await adjustCommandRoles();
 }
 
 bootstrap().then(() => {
