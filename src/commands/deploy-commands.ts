@@ -3,9 +3,13 @@ import { RESTGetAPIApplicationGuildCommandsResult, Routes } from 'discord-api-ty
 import commands, { INFO_COMMAND_NAME, NOTIFY_USERS_COMMAND_NAME } from './custom-commands';
 
 const token = process.env.CLIENT_TOKEN;
+console.log('CLIENT_TOKEN', token);
 const clientId = process.env.CLIENT_ID;
+console.log('CLIENT_ID', clientId);
 const guildId = process.env.AZ_MOGA_SERVER_ID;
+console.log('AZ_MOGA_SERVER_ID', guildId);
 const adminRoleIds = process.env.AZ_MOGA_ADMIN_ROLE_IDS.split(',');
+console.log('AZ_MOGA_ADMIN_ROLE_IDS', process.env.AZ_MOGA_ADMIN_ROLE_IDS);
 
 const adminOnlyCommands = [INFO_COMMAND_NAME]
 const rest = new REST({ version: '9' }).setToken(token);
