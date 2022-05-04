@@ -11,8 +11,9 @@ import { ValidateMeCommand } from './commands/ValidateMeCommand';
 import { AzMogaUsersService } from './services/AzMogaUsersService';
 import { UserStoreService } from './services/UserStoreService';
 import { DiscordMetadataSynchronizationService } from './services/DiscordMetadataSynchronizationService';
+import path from 'path';
 
-config();
+config({path: path.join(__dirname, "../.env")});
 
 const bootstrap = async () => {
     await deployCommands();
