@@ -13,7 +13,9 @@ import { UserStoreService } from './services/UserStoreService';
 import { DiscordMetadataSynchronizationService } from './services/DiscordMetadataSynchronizationService';
 import path from 'path';
 
-config({path: path.join(__dirname, ".env")});
+const dotnenvConfigPath = path.join(__dirname, ".env");
+console.log('dotnenvConfigPath', dotnenvConfigPath);
+config({path: dotnenvConfigPath});
 
 const bootstrap = async () => {
     await deployCommands();
