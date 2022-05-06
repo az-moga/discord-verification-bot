@@ -12,6 +12,7 @@ import { AzMogaUsersService } from './services/AzMogaUsersService';
 import { UserStoreService } from './services/UserStoreService';
 import { DiscordMetadataSynchronizationService } from './services/DiscordMetadataSynchronizationService';
 import path from 'path';
+import { FeedService } from './services/FeedService';
 
 const dotnenvConfigPath = path.join(__dirname, ".env");
 console.log('dotnenvConfigPath', dotnenvConfigPath);
@@ -26,6 +27,7 @@ bootstrap().then(async () => {
     const userService = new AzMogaUsersService();
     const userStoreService = new UserStoreService();
     const metadataSyncService = new DiscordMetadataSynchronizationService(userStoreService, userService, client);
+    const feedService = new FeedService(client);
 
     const clientReadyHandler = new ClientReadyEventHandler();
     const interactionCreateHandler = new InteractionCreateEventHandler();
@@ -36,7 +38,8 @@ bootstrap().then(async () => {
         messageCreateHandler,
         userService,
         userStoreService,
-        metadataSyncService
+        metadataSyncService,
+        feedService
     ));
 
     client.on('ready', async (client: Client<true>) => {

@@ -3,6 +3,7 @@ import { IMessageHandlerRegistry } from "../messages/message-handler-registry";
 import { IDiscordUser } from "../models/discord-user";
 import { AzMogaUsersService } from "../services/AzMogaUsersService";
 import { DiscordMetadataSynchronizationService } from "../services/DiscordMetadataSynchronizationService";
+import { FeedService } from "../services/FeedService";
 import { UserStoreService } from "../services/UserStoreService";
 import { ICommand } from "./command-registry";
 
@@ -13,7 +14,8 @@ export class ValidateMeCommand implements ICommand {
         private messageHandlerRegistry: IMessageHandlerRegistry, 
         private userService: AzMogaUsersService,
         private userStoreService: UserStoreService,
-        private metadataService: DiscordMetadataSynchronizationService
+        private metadataService: DiscordMetadataSynchronizationService,
+        private feedService: FeedService
     ) { }
 
     async execute(interaction: CommandInteraction<CacheType>): Promise<void> {
@@ -21,6 +23,9 @@ export class ValidateMeCommand implements ICommand {
             await interaction.deferReply();
             if (interaction.member instanceof GuildMember) {
                 const targetUserId = interaction.member.id;
+                const targetUserName = interaction.member.displayName;
+                const targetUserAlias = interaction.member.nickname;
+
                 const dmChannel = await interaction.member.createDM(true);
 
                 const discordUser = await this.userStoreService.readForDiscordId(targetUserId);
@@ -33,7 +38,6 @@ export class ValidateMeCommand implements ICommand {
 
                 this.messageHandlerRegistry.register(targetUserId, {
                     process: async message => {
-                        debugger;
                         const [phone, email] = message.content.split(':');
                         const user = await this.userService.find(phone, email);
 
@@ -48,6 +52,10 @@ export class ValidateMeCommand implements ICommand {
                             this.messageHandlerRegistry.unregister(targetUserId);
                         } else {
                             await dmChannel.send({ content: 'Моля опитайте отново, като спазвате формата.' });
+                            const feedMessage = `Неуспешен опит за верификация:
+                                @${targetUserId} | ${targetUserName} | ${targetUserAlias} | \`\`\`${message.content}\`\`\`
+                            `
+                            this.feedService.message(feedMessage);
                         }
                     }
                 })
