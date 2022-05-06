@@ -52,8 +52,7 @@ export class ValidateMeCommand implements ICommand {
                             this.messageHandlerRegistry.unregister(targetUserId);
                         } else {
                             await dmChannel.send({ content: 'Моля опитайте отново, като спазвате формата.' });
-                            const feedMessage = `Неуспешен опит за верификация : 
-                            \`\`\`@${targetUserId} | ${targetUserName} | ${message.content}\`\`\``
+                            const feedMessage = `Неуспешен опит за верификация: \`\`\`@${targetUserId} | ${targetUserName} | **${message.content}**\`\`\``
                             this.feedService.message(feedMessage);
                         }
                     }
